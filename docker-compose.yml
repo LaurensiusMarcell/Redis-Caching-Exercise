@@ -1,4 +1,7 @@
+version: '3.8'
+
 services:
+  # 1. Database PostgreSQL
   db:
     image: postgres:15
     container_name: simple-lms-db
@@ -8,13 +11,39 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    # Memastikan kontainer web tidak start duluan sebelum database benar-benar siap
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
 
+  # 2. In-Memory Cache & Message Broker (Redis)
+  redis:
+    image: redis:7-alpine
+    container_name: simple-lms-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 3. NoSQL Database untuk Logs & Analytics (MongoDB)
+  mongodb:
+    image: mongo:6
+    container_name: simple-lms-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 4. Django Ninja Application Web Service
   web:
     build: .
     container_name: simple-lms-web
@@ -28,6 +57,50 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+
+  # 5. Celery Asynchronous Worker
+  celery:
+    build: .
+    container_name: simple-lms-celery
+    command: celery -A config worker --loglevel=info
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # 6. Celery Beat Periodic Scheduler
+  celery_beat:
+    build: .
+    container_name: simple-lms-celery-beat
+    command: celery -A config beat --loglevel=info
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # 7. Flower Celery Monitoring Dashboard
+  flower:
+    image: mher/flower:latest
+    container_name: simple-lms-flower
+    command: celery --broker=redis://redis:6379/0 flower
+    ports:
+      - "5555:5555"
+    depends_on:
+      redis:
+        condition: service_healthy
 
 volumes:
   postgres_data:
+  mongodb_data:

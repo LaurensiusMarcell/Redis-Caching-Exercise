@@ -1,10 +1,4 @@
 # ==============================================================================
-# DOCKER & DATABASE LOCAL DATA
-# ==============================================================================
-postgres_data/
-.docker/
-
-# ==============================================================================
 # DJANGO CORE & STATIC/MEDIA MANAGEMENT
 # ==============================================================================
 *.pyc
@@ -19,23 +13,34 @@ media/
 # ENVIRONMENT VARIABLES & VIRTUAL ENVS (SECURITY CRITICAL)
 # ==============================================================================
 .env
-.venv
+.venv/
 env/
 venv/
 ENV/
 
 # ==============================================================================
-# DOCUMENTATION & SPECIFIC SCREENSHOTS
+# DOCKER & DATABASE LOCAL DATA
+# ==============================================================================
+postgres_data/
+mongodb_data/
+.docker/
+
+# ==============================================================================
+# SYSTEM & CACHE FILES
 # ==============================================================================
 .DS_Store
 Thumbs.db
 .pytest_cache/
 
-# Blokir semua gambar secara umum...
+# ==============================================================================
+# MEDIA BLOCK & WHITING FOR OFFICIAL DOCS (REVISED LOGIC)
+# ==============================================================================
+# 1. Blokir semua file gambar secara global di root dan sub-folder
 *.png
 *.jpg
 *.jpeg
+*.gif
 
-# ...KECUALI gambar yang berada di dalam folder khusus dokumentasi resmi
+# 2. Beri pengecualian khusus untuk folder docs/ agar isinya tetap dilacak Git
 !docs/
 !docs/**

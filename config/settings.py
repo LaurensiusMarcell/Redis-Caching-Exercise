@@ -66,7 +66,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # ==============================================================================
-# 3. DATABASE CONFIGURATION (PostgreSQL)
+# 3. PRIMARY DATABASE CONFIGURATION (PostgreSQL)
 # ==============================================================================
 DATABASES = {
     'default': {
@@ -80,7 +80,35 @@ DATABASES = {
 }
 
 # ==============================================================================
-# 4. AUTHENTICATION PASSWORD VALIDATORS
+# 4. REDIS IN-MEMORY SYSTEM & CACHE CONFIGURATION
+# ==============================================================================
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.environ.get('REDIS_CACHE_URL', 'redis://redis:6379/1'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+# ==============================================================================
+# 5. NOSQL DOCUMENT DATABASE (MongoDB)
+# ==============================================================================
+MONGODB_URI = os.environ.get('MONGODB_URI', 'mongodb://mongodb:27017/')
+
+# ==============================================================================
+# 6. ASYNCHRONOUS BACKGROUND TASKS & QUEUES (Celery)
+# ==============================================================================
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://redis:6379/0')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'redis://redis:6379/0')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Jakarta'
+
+# ==============================================================================
+# 7. AUTHENTICATION PASSWORD VALIDATORS
 # ==============================================================================
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -90,15 +118,15 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # ==============================================================================
-# 5. INTERNATIONALIZATION
+# 8. INTERNATIONALIZATION & LOCALIZATION
 # ==============================================================================
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Jakarta'  # Disamakan dengan Celery untuk ketepatan waktu logs & scheduled tasks
 USE_I18N = True
 USE_TZ = True
 
 # ==============================================================================
-# 6. STATIC & MEDIA FILES CONFIGURATION
+# 9. STATIC & MEDIA FILES CONFIGURATION
 # ==============================================================================
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
