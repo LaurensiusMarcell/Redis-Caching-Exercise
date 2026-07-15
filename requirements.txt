@@ -1,2 +1,11 @@
+# --- Framework & API ---
 Django>=5.0,<5.1
-psycopg2-binary>=2.9
+django-ninja>=1.1.0
+django-ninja-extra>=0.20.0
+django-ninja-jwt>=1.0.2
+
+# --- Database Drivers ---
+psycopg2-binary>=2.9.0
+
+# --- Data Validation & Utils ---
+email-validator>=2.0.0

@@ -25,10 +25,17 @@ venv/
 ENV/
 
 # ==============================================================================
-# DOCUMENTATION & TEMPORARY SCREENSHOTS
+# DOCUMENTATION & SPECIFIC SCREENSHOTS
 # ==============================================================================
+.DS_Store
+Thumbs.db
+.pytest_cache/
+
+# Blokir semua gambar secara umum...
 *.png
 *.jpg
 *.jpeg
-.DS_Store
-Thumbs.db
+
+# ...KECUALI gambar yang berada di dalam folder khusus dokumentasi resmi
+!docs/
+!docs/**
