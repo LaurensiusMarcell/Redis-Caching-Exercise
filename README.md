@@ -17,21 +17,30 @@ Berikut adalah log riil dari hasil eksekusi skrip pengujian `test_cache.py` untu
 ==================================================
 
 [TEST] Menjalankan Panggilan Pertama...
-🐢 [CACHE MISS] Data kota 'Semarang' tidak ditemukan di cache.
+🐢 [CACHE MISS] Data kota 'Jakarta' tidak ditemukan di cache.
 ⏳ Menjalankan simulasi API call lambat (2 detik)...
-💾 [SAVED TO CACHE] Data kota 'Semarang' disimpan ke Redis untuk 5 menit ke depan.
-👉 First call result: 2.14s
+💾 [SAVED TO CACHE] Data kota 'Jakarta' disimpan ke Redis untuk 5 menit ke depan.
+👉 First call result: 2.13s
 
 --------------------------------------------------
 
 [TEST] Menjalankan Panggilan Kedua (Data Ter-cache)...
-⚡ [CACHE HIT] Data cuaca kota 'Semarang' ditemukan di Redis!
-👉 Second call (cached) result: 0.0030s
+⚡ [CACHE HIT] Data cuaca kota 'Jakarta' ditemukan di Redis!
+👉 Second call (cached) result: 0.0031s
 
 ==================================================
                TEST SELESAI                       
 ==================================================
 ```
+
+## 📸 2. Kode yang dimodifikasi
+- Modifikasi fungsi get_weather()
+![weather 1](docs/redis_caching/weather-1.png)
+![weather 2](docs/redis_caching/weather-2.png)
+![weather 3](docs/redis_caching/weather-3.png)    
+         
+- Redis Caching Testing
+![test cache](docs/redis_caching/test_cache.png)
 
 ## 🗄️ 3. Redis Commands yang Digunakan
 1. GET
@@ -47,8 +56,8 @@ Sesuai instruksi soal, mahasiswa tidak perlu menunggu 5 menit secara riil. Berka
 
 ## ❓ 4. Analisis Hasil & Jawaban Pertanyaan Tugas
 1. Kenapa response time berbeda?
-- Panggilan Pertama (2.14s) - Cache Miss: Lambat karena data belum ada di Redis. Sistem terpaksa mengambil data lewat jaringan internet/API luar yang memakan waktu (ditambah simulasi time.sleep(2)).
-- Panggilan Kedua (0.0030s) - Cache Hit: Sangat cepat karena data sudah disalin ke RAM Redis. Sistem langsung mengambil data dari memori lokal komputer tanpa perlu internet lagi.
+- Panggilan Pertama (2.13s) - Cache Miss: Lambat karena data belum ada di Redis. Sistem terpaksa mengambil data lewat jaringan internet/API luar yang memakan waktu (ditambah simulasi time.sleep(2)).
+- Panggilan Kedua (0.0031s) - Cache Hit: Sangat cepat karena data sudah disalin ke RAM Redis. Sistem langsung mengambil data dari memori lokal komputer tanpa perlu internet lagi.
 
 2. Apa keuntungan caching?
 - Aplikasi Jauh Lebih Cepat: Memotong waktu tunggu dari hitungan detik menjadi milidetik.
