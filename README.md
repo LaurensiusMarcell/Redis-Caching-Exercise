@@ -40,7 +40,7 @@ Berikut adalah log riil dari hasil eksekusi skrip pengujian `test_cache.py` untu
 ![weather 3](docs/redis_caching/weather-3.png)    
          
 - Redis Caching Testing
-![test cache](docs/redis_caching/test_cache.png)
+![test cache](docs/redis_caching/test_cache_1.png)
 
 ## 🗄️ 3. Redis Commands yang Digunakan
 1. GET
